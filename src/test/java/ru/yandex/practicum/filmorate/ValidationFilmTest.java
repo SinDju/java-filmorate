@@ -21,12 +21,13 @@ public class ValidationFilmTest {
 
     @Test
     void validateNameIsEmpty() {
-        Film film = new Film();
-        film.setId(1);
-        film.setName(" ");
-        film.setDescription("Какой-то очень интересный фильм:)");
-        film.setReleaseDate(LocalDate.of(1997, 12,9));
-        film.setDuration(15);
+        Film film = Film.builder()
+                .name(" ")
+                .id(1)
+                .description("Какой-то очень интересный фильм:)")
+                .releaseDate(LocalDate.of(1997, 12,9))
+                .duration(160)
+                .build();
 
         Set<ConstraintViolation<Film>> violations = validator.validate(film);
         assertEquals(1, violations.size(), "Name is not empty");
@@ -34,12 +35,13 @@ public class ValidationFilmTest {
 
     @Test
     void validateEmptyDescription() {
-        Film film = new Film();
-        film.setId(1);
-        film.setName("D");
-        film.setDescription(" ");
-        film.setReleaseDate(LocalDate.of(1997, 12,9));
-        film.setDuration(15);
+        Film film = Film.builder()
+                .name("D")
+                .id(1)
+                .description(" ")
+                .releaseDate(LocalDate.of(1997, 12,9))
+                .duration(160)
+                .build();
 
         Set<ConstraintViolation<Film>> violations = validator.validate(film);
         assertEquals(1, violations.size(), "Description is correct");
@@ -47,12 +49,13 @@ public class ValidationFilmTest {
 
     @Test
     void validateIncorrectReleaseDate() {
-        Film film = new Film();
-        film.setId(1);
-        film.setName("D");
-        film.setDescription("Фильм вышедший в другой реальности, так как у нас кино зародилось 28.12.1895");
-        film.setReleaseDate(LocalDate.of(1890, 12, 27));
-        film.setDuration(15);
+        Film film = Film.builder()
+                .name("D")
+                .id(1)
+                .description("Фильм вышедший в другой реальности, так как у нас кино зародилось 28.12.1895")
+                .releaseDate(LocalDate.of(1890, 12, 27))
+                .duration(160)
+                .build();
 
         Set<ConstraintViolation<Film>> violations = validator.validate(film);
         assertEquals(1, violations.size(), "ReleaseDate is correct");
@@ -60,12 +63,13 @@ public class ValidationFilmTest {
 
     @Test
     void validateNegativeDuration() {
-        Film film = new Film();
-        film.setId(1);
-        film.setName("Я");
-        film.setDescription("Какой-то очень интересный фильм:)");
-        film.setReleaseDate(LocalDate.of(1997, 12,9));
-        film.setDuration(-25);
+        Film film = Film.builder()
+                .name("Я")
+                .id(1)
+                .description("Какой-то очень интересный фильм:)")
+                .releaseDate(LocalDate.of(1997, 12,9))
+                .duration(-160)
+                .build();
 
         Set<ConstraintViolation<Film>> violations = validator.validate(film);
         assertEquals(1, violations.size(), "Duration is positive");

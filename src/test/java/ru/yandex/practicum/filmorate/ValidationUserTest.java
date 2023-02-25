@@ -22,23 +22,39 @@ public class ValidationUserTest {
 
     @Test
     void validateLoginIsEmpty() {
-        User user = new User();
-        user.setLogin(" ");
-        user.setId(1);
-        user.setEmail("rek@mail.ru");
-        user.setBirthday(LocalDate.of(1997, 12,9));
+        User user = User.builder()
+                .login(" ")
+                .name("O")
+                .id(1)
+                .email("rek@mail.ru")
+                .birthday(LocalDate.of(1997, 12,9))
+                .build();
 
         Set<ConstraintViolation<User>> violations = validator.validate(user);
         assertEquals(1, violations.size(), "Login is not empty");
     }
 
     @Test
+    void validateLoginIsWhitespace() {
+        User user = User.builder()
+                .login("A m i K o")
+                .id(1)
+                .email("rek@mail.ru")
+                .birthday(LocalDate.of(1997, 12,9))
+                .build();
+
+        Set<ConstraintViolation<User>> violations = validator.validate(user);
+        assertEquals(1, violations.size(), "The login contains a space");
+    }
+
+    @Test
     void validateIncorrectEmail() {
-        User user = new User();
-        user.setLogin("cat");
-        user.setId(1);
-        user.setEmail("это-неправильный?эмейл@");
-        user.setBirthday(LocalDate.of(1997, 12,9));
+        User user = User.builder()
+                .login("cat")
+                .id(1)
+                .email("это-неправильный?эмейл@")
+                .birthday(LocalDate.of(1997, 12,9))
+                .build();
 
         Set<ConstraintViolation<User>> violations = validator.validate(user);
         assertEquals(1, violations.size(), "Email is correct");
@@ -46,11 +62,12 @@ public class ValidationUserTest {
 
     @Test
     void validateIncorrectBirthday() {
-        User user = new User();
-        user.setLogin("cat");
-        user.setId(1);
-        user.setEmail("rek@mail.ru");
-        user.setBirthday(LocalDate.of(2997, 12,9));
+        User user = User.builder()
+                .login("cat")
+                .id(1)
+                .email("rek@mail.ru")
+                .birthday(LocalDate.of(2997, 12,9))
+                .build();
 
         Set<ConstraintViolation<User>> violations = validator.validate(user);
         assertEquals(1, violations.size(), "Birthday is correct");
@@ -58,11 +75,12 @@ public class ValidationUserTest {
 
     @Test
     void validateNullBirthday() {
-        User user = new User();
-        user.setLogin("cat");
-        user.setId(1);
-        user.setEmail("rek@mail.ru");
-        user.setBirthday(null);
+        User user = User.builder()
+                .login("cat")
+                .id(1)
+                .email("rek@mail.ru")
+                .birthday(null)
+                .build();
 
         Set<ConstraintViolation<User>> violations = validator.validate(user);
         assertEquals(1, violations.size(), "Correct Birthday");

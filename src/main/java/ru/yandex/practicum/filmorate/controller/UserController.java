@@ -2,9 +2,11 @@ package ru.yandex.practicum.filmorate.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.exeption.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
 import javax.validation.Valid;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -37,7 +39,7 @@ public class UserController {
             if (usersMap.containsKey(user.getId())){
                 usersMap.put(user.getId(), user);
             } else {
-                throw new RuntimeException("Пользователь еще не зарегестрирован");
+                throw new ValidationException("Пользователь еще не зарегестрирован");
             }
             return user;
         }

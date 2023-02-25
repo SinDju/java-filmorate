@@ -2,16 +2,14 @@ package ru.yandex.practicum.filmorate.model;
 
 import lombok.*;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.PastOrPresent;
+import javax.validation.constraints.*;
 import java.time.LocalDate;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
+//@Getter
+//@Setter
+//@NoArgsConstructor
+//@AllArgsConstructor
+@Data
 @Builder
 public class User {
     private Integer id;
@@ -19,8 +17,8 @@ public class User {
     @Email(message = "Неккоректная почта")
     private String email;
 
-    @NotBlank
-    private String login;
+    @Pattern(regexp = "\\S*", message = "Логин не может содержать пробелы.")
+    private @NotEmpty String login;
 
     private String name;
 
