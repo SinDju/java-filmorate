@@ -5,10 +5,6 @@ import lombok.*;
 import javax.validation.constraints.*;
 import java.time.LocalDate;
 
-//@Getter
-//@Setter
-//@NoArgsConstructor
-//@AllArgsConstructor
 @Data
 @Builder
 public class User {
