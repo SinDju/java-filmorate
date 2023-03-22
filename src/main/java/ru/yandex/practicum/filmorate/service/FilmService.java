@@ -1,6 +1,5 @@
 package ru.yandex.practicum.filmorate.service;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exeption.ErrorIdException;
@@ -13,12 +12,17 @@ import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 import java.util.Collection;
 import java.util.List;
 
-@RequiredArgsConstructor
 @Service
 public class FilmService {
     private final UserService userServicee;
     private final FilmStorage filmStorage;
     private int generatoreId = 0;
+
+    @Autowired
+    FilmService(UserService userServicee, FilmStorage filmStorage){
+        this.userServicee = userServicee;
+        this.filmStorage = filmStorage;
+    }
 
     public List<Film> getAllFilms() {
         return filmStorage.getAllFilms();
