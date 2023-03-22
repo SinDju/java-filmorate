@@ -32,7 +32,7 @@ public class Film {
     @Positive
     private int duration;
 
-    Set<Integer> likes = new HashSet<>();
+    private Set<Integer> likes = new HashSet<>();
 
     public boolean addLike(Integer userId) {
         return likes.add(userId);

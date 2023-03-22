@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exeption.ErrorIdException;
@@ -12,17 +13,12 @@ import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 import java.util.Collection;
 import java.util.List;
 
+@RequiredArgsConstructor
 @Service
 public class FilmService {
     private final UserService userServicee;
     private final FilmStorage filmStorage;
     private int generatoreId = 0;
-
-    @Autowired
-    FilmService(UserService userServicee, FilmStorage filmStorage){
-        this.userServicee = userServicee;
-        this.filmStorage = filmStorage;
-    }
 
     public List<Film> getAllFilms() {
         return filmStorage.getAllFilms();
@@ -71,12 +67,12 @@ public class FilmService {
         return film;
     }
 
-    // пользователь ставит лайк фильму(надо добавить бин ЮзерСтородж?)
+    // пользователь ставит лайк фильму
     public void addLike(String id, String userId) {
         Film film = getFilmStorage(id);
         User user = userServicee.getUserStorage(userId);
         filmStorage.addLike(film.getId(), user.getId());
-    } // делать проверку что пользователь может поставить лайк только 1 раз
+    }
 
     // пользователь удаляет лайк
     public void deleteLike(String id, String userId) {
@@ -86,7 +82,7 @@ public class FilmService {
     }
 
     // ?count={count} - возвращает список из первых count фильмов по количеству лайков.
-    // Если значение параметра count не задано, верните первые 10. Film count?
+    // Если значение параметра count не задано, верните первые 10.
     public Collection<Film> getPopularFilm(String count){
         int size = stringForInt(count);
         if (size == Integer.MIN_VALUE) {

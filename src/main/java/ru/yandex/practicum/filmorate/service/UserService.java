@@ -1,26 +1,21 @@
 package ru.yandex.practicum.filmorate.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exeption.ErrorIdException;
 import ru.yandex.practicum.filmorate.exeption.NotFoundException;
 import ru.yandex.practicum.filmorate.exeption.UserValidationException;
-import ru.yandex.practicum.filmorate.exeption.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import java.util.*;
 
+@RequiredArgsConstructor
 @Service
 public class UserService {
     // Сервис реализует основную логику проверки и запрашивает необходимую информацию от Стореджа
     private UserStorage userStorage;
     private int generatoreId = 0;
-
-    @Autowired
-    public UserService(UserStorage userStorage) {
-        this.userStorage = userStorage;
-    }
 
     public List<User> getAll() {
         return userStorage.getAllUsers();
@@ -61,8 +56,8 @@ public class UserService {
         User user = getUserStorage(userId);
         User userFriend = getUserStorage(friendId);
         Collection<User> commonFriends = new HashSet<>();
-        for (Integer idFriend : user.getIdFriends()) {
-            if (userFriend.getIdFriends().contains(idFriend)) {
+        for (Integer idFriend : user.getFriendIds()) {
+            if (userFriend.getFriendIds().contains(idFriend)) {
                 commonFriends.add(userStorage.getUser(idFriend));
             }
         }
@@ -73,7 +68,7 @@ public class UserService {
     public ArrayList<User> getFriends(String userId) {
         User user = getUserStorage(userId);
         ArrayList<User> friendsUser = new ArrayList<>();
-        for (Integer idFriend : user.getIdFriends()) {
+        for (Integer idFriend : user.getFriendIds()) {
             friendsUser.add(userStorage.getUser(idFriend));
         }
         return friendsUser;
