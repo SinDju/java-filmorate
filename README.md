@@ -2,5 +2,5 @@
 Template repository for Filmorate project.
  ### Схема Базы данных filmorate
 <picture>
-<img src="src/main/resources/er_diagram.png">
+<img src="src/main/resources/er_diagram_filmorate.png">
 </picture>
