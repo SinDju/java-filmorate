@@ -1,3 +1,6 @@
 # java-filmorate
 Template repository for Filmorate project.
- ![ER diagram filmorate.](er diagram.jpg)
+ ### Схема Базы данных filmorate
+<picture>
+<img src="src/main/resources/er_diagram.png">
+</picture>
