@@ -2,14 +2,10 @@ package ru.yandex.practicum.filmorate.exeption;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.yandex.practicum.filmorate.model.ErrorMessage;
-
-import java.util.Date;
-import java.util.Map;
 
 @RestControllerAdvice("ru.yandex.practicum.filmorate")
 @Slf4j

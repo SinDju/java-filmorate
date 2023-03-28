@@ -1,7 +1,6 @@
 package ru.yandex.practicum.filmorate.storage.user;
 
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.exeption.NotFoundException;
 import ru.yandex.practicum.filmorate.exeption.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
@@ -10,7 +9,6 @@ import java.util.*;
 @Component
 public class InMemoryUserStorage implements UserStorage {
     private HashMap<Integer, User> usersMap = new HashMap<>();
-//    private int generatoreId = 0;
 
     @Override
     public List<User> getAllUsers() {
@@ -18,8 +16,11 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public User getUser(int id) {
-        return usersMap.get(id);
+    public Optional<User> getUser(int id) {
+        if (usersMap.get(id) == null){
+            return Optional.empty();
+        }
+        return Optional.of(usersMap.get(id));
     }
 
     @Override

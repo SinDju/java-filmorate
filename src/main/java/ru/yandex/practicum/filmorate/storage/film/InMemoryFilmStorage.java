@@ -37,8 +37,11 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     @Override
-    public Film getFilm(int id) { // получение фильма по id
-        return filmsMap.get(id);
+    public Optional<Film> getFilm(int id) { // получение фильма по id
+        if (filmsMap.get(id) == null){
+            return Optional.empty();
+        }
+        return Optional.of(filmsMap.get(id));
     }
 
     @Override
