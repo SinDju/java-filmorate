@@ -18,8 +18,11 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public User getUser(int id) {
-        return usersMap.get(id);
+    public Optional<User> getUser(int id) {
+        if (usersMap.get(id) == null){
+            return Optional.empty();
+        }
+        return Optional.of(usersMap.get(id));
     }
 
     @Override

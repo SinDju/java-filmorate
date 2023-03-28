@@ -8,9 +8,7 @@ import javax.validation.constraints.PastOrPresent;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Getter
 @Setter
@@ -32,7 +30,20 @@ public class Film {
     @Positive
     private int duration;
 
+    @Builder.Default
     private Set<Integer> likes = new HashSet<>();
+
+    @Builder.Default
+    private List<Genre> genres = new ArrayList<>();
+    private MPARating mpa;
+
+    public boolean addGenre (Genre genre) {
+        return genres.add(genre);
+    }
+
+    public boolean deleteGenre (Integer genreId) {
+        return genres.remove(genreId);
+    }
 
     public boolean addLike(Integer userId) {
         return likes.add(userId);

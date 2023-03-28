@@ -6,6 +6,7 @@ import javax.validation.constraints.*;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -24,7 +25,9 @@ public class User {
 
     @PastOrPresent(message = "Дата рождения не может быть в будущем.")
     private @NotNull LocalDate birthday;
-    private HashSet<Integer> friendIds = new HashSet<>();
+
+    @Builder.Default
+    private Set<Integer> friendIds = new HashSet<>();
 
     public boolean addFriend(final Integer id) {
         return friendIds.add(id);
