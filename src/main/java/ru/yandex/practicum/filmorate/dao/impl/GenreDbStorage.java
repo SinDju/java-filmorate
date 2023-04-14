@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 @Component
 public class GenreDbStorage implements GenreDao {
     private final JdbcTemplate jdbcTemplate;
+    Genre genre = new Genre();
 
     public GenreDbStorage(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -65,7 +66,7 @@ public class GenreDbStorage implements GenreDao {
         String sql = "INSERT INTO FILMS_GENRES (FILM_ID, GENRE_ID) VALUES (?, ?)";
         Set<Integer> saveGenres = genres.stream().map(Genre::getId).collect(Collectors.toSet());
         for (Integer genreId : saveGenres) {
-                jdbcTemplate.update(sql, filmId, genreId);
+            jdbcTemplate.update(sql, filmId, genreId);
         }
     }
 }
