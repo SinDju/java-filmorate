@@ -36,7 +36,7 @@ public class GenreDbStorage implements GenreDao {
         return jdbcTemplate.query(sql, this::makeGenre, filmId);
     }
 
-    private Genre makeGenre (ResultSet resultSet, int rowNum) throws SQLException {
+    private Genre makeGenre(ResultSet resultSet, int rowNum) throws SQLException {
         return new Genre(resultSet.getInt("ID"), resultSet.getString("GENRE_NAME"));
     }
 
