@@ -10,8 +10,8 @@ import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.*;
 
-@Getter
 @Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -19,7 +19,7 @@ public class Film {
     private Integer id;
     @NonNull
     private @NotBlank String name;
-    @Size(min= 1, max= 200)
+    @Size(min = 1, max = 200)
     private @NotBlank String description;
     @CorrectReleaseDate
     private @PastOrPresent LocalDate releaseDate;
@@ -31,11 +31,11 @@ public class Film {
     private List<Genre> genres = new ArrayList<>();
     private MPARating mpa;
 
-    public boolean addGenre (Genre genre) {
+    public boolean addGenre(Genre genre) {
         return genres.add(genre);
     }
 
-    public boolean deleteGenre (Integer genreId) {
+    public boolean deleteGenre(Integer genreId) {
         return genres.remove(genreId);
     }
 
