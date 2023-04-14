@@ -24,9 +24,9 @@ public class MPARatingDbStorage implements MPARatingDao {
         String sql = "SELECT * FROM MPARATING";
         SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet(sql);
         while (sqlRowSet.next()) {
-            MPARating MPARating = new MPARating(sqlRowSet.getInt("ID"),
+            MPARating mpaRating = new MPARating(sqlRowSet.getInt("ID"),
                     sqlRowSet.getString("RATING_NAME"));
-            mpaList.add(MPARating);
+            mpaList.add(mpaRating);
         }
         return mpaList;
     }
