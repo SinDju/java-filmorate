@@ -17,22 +17,16 @@ import java.util.*;
 @Builder
 public class Film {
     private Integer id;
-
     @NonNull
     private @NotBlank String name;
-
     @Size(min= 1, max= 200)
     private @NotBlank String description;
-
     @CorrectReleaseDate
     private @PastOrPresent LocalDate releaseDate;
-
     @Positive
     private int duration;
-
     @Builder.Default
     private Set<Integer> likes = new HashSet<>();
-
     @Builder.Default
     private List<Genre> genres = new ArrayList<>();
     private MPARating mpa;

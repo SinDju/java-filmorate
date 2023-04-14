@@ -15,17 +15,13 @@ import java.util.Set;
 @Builder
 public class User {
     private Integer id;
-
     @Email(message = "Неккоректная почта")
     private String email;
-
     @Pattern(regexp = "\\S*", message = "Логин не может содержать пробелы.")
     private @NotEmpty String login;
     private String name;
-
     @PastOrPresent(message = "Дата рождения не может быть в будущем.")
     private @NotNull LocalDate birthday;
-
     @Builder.Default
     private Set<Integer> friendIds = new HashSet<>();
 
