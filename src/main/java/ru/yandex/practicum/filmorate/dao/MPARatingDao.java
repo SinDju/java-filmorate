@@ -6,5 +6,6 @@ import java.util.List;
 
 public interface MPARatingDao {
     public List<MPARating> getAllMpa();
+
     public MPARating getMpaById(int id);
 }
