@@ -8,21 +8,17 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.exeption.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.Genre;
-import ru.yandex.practicum.filmorate.model.MPARating;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
 @Component
 public class FilmDbStorage implements FilmStorage {
-    private final Logger log = LoggerFactory.getLogger(FilmDbStorage.class);
+    private final Logger logger = LoggerFactory.getLogger(FilmDbStorage.class);
     private final JdbcTemplate jdbcTemplate;
     private MPARatingDbStorage mpaDbStorage;
     private GenreDbStorage genreDbStorage;
@@ -71,11 +67,11 @@ public class FilmDbStorage implements FilmStorage {
                     .genres(genreDbStorage.getGenresByFilm(rowFilm.getInt("id")))
                     .mpa(mpaDbStorage.getMpaById(rowFilm.getInt("MPARating_id"))).build();
             film.getLikes().addAll(getLikesFilm(film.getId()));
-            log.info("Найден фильм: {} {} {} {} {} {}", film.getId(), film.getName(), film.getDescription(),
+            logger.info("Найден фильм: {} {} {} {} {} {}", film.getId(), film.getName(), film.getDescription(),
                     film.getReleaseDate(), film.getDuration(), film.getMpa().getName());
             return Optional.of(film);
         } else {
-            log.info("Фильм с идентификатором {} не найден.", id);
+            logger.info("Фильм с идентификатором {} не найден.", id);
             return Optional.empty();
         }
     }
@@ -102,7 +98,7 @@ public class FilmDbStorage implements FilmStorage {
                 addLike(film.getId(), userId);
             }
         }
-        log.info("Создан фильм: {} {} {} {} {} {}", film.getId(), film.getDescription(),
+        logger.info("Создан фильм: {} {} {} {} {} {}", film.getId(), film.getDescription(),
                 film.getDuration(), film.getReleaseDate(), film.getMpa(), film.getLikes());
         return getFilm(film.getId()).get();
     }
