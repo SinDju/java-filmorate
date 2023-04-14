@@ -35,10 +35,6 @@ public class GenreDbStorage implements GenreDao {
         return jdbcTemplate.query(sql, this::makeGenre, filmId);
     }
 
-    private Genre makeGenre(ResultSet resultSet, int rowNum) throws SQLException {
-        return new Genre(resultSet.getInt("ID"), resultSet.getString("GENRE_NAME"));
-    }
-
     @Override
     public Genre getGenreById(int id) {
         String sql = "SELECT * FROM GENRES WHERE ID = ?";
@@ -67,5 +63,9 @@ public class GenreDbStorage implements GenreDao {
         for (Integer genreId : saveGenres) {
             jdbcTemplate.update(sql, filmId, genreId);
         }
+    }
+
+    private Genre makeGenre(ResultSet rs, int rowNum) throws SQLException {
+        return new Genre(rs.getInt("ID"), rs.getString("GENRE_NAME"));
     }
 }
