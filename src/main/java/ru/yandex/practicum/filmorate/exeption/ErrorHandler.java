@@ -10,7 +10,6 @@ import ru.yandex.practicum.filmorate.model.ErrorMessage;
 @RestControllerAdvice("ru.yandex.practicum.filmorate")
 @Slf4j
 public class ErrorHandler {
-
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(value = {FilmValidationException.class, UserValidationException.class, ErrorIdException.class})
     public ErrorMessage handleException(RuntimeException exception) {
