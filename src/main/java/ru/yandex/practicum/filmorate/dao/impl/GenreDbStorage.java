@@ -36,8 +36,7 @@ public class GenreDbStorage implements GenreDao {
     }
 
     private Genre makeGenre(ResultSet resultSet, int rowNum) throws SQLException {
-        return
-                new Genre(resultSet.getInt("ID"), resultSet.getString("GENRE_NAME"));
+        return new Genre(resultSet.getInt("ID"), resultSet.getString("GENRE_NAME"));
     }
 
     @Override
