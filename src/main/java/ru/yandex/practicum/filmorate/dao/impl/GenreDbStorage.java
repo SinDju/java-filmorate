@@ -17,7 +17,6 @@ import java.util.stream.Collectors;
 public class GenreDbStorage implements GenreDao {
     private final JdbcTemplate jdbcTemplate;
 
-
     public GenreDbStorage(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
@@ -46,8 +45,7 @@ public class GenreDbStorage implements GenreDao {
         Genre genre;
         try {
             genre = jdbcTemplate.queryForObject(sql, this::makeGenre, id);
-        }
-        catch (EmptyResultDataAccessException e) {
+        } catch (EmptyResultDataAccessException e) {
             throw new NotFoundException("Жанр с идентификатором " +
                     id + " не зарегистрирован!");
         }
