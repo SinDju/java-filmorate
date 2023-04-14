@@ -84,7 +84,7 @@ public class UserService {
 
     public User getUserStorage(String supposedId) {
         Integer userId = stringForInt(supposedId);
-        if(userId == Integer.MIN_VALUE) {
+        if (userId == Integer.MIN_VALUE) {
             throw new ErrorIdException("Не удалось распознать идентификатор пользователя: "
                     + supposedId);
         }
