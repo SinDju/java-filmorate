@@ -35,7 +35,7 @@ public class GenreDbStorage implements GenreDao {
         return jdbcTemplate.query(sql, this::makeGenre, filmId);
     }
 
-    private Genre makeGenre (ResultSet resultSet, int rowNum) throws SQLException {
+    private Genre makeGenre(ResultSet resultSet, int rowNum) throws SQLException {
         return new Genre(resultSet.getInt("ID"), resultSet.getString("GENRE_NAME"));
     }
 
@@ -65,7 +65,7 @@ public class GenreDbStorage implements GenreDao {
         String sql = "INSERT INTO FILMS_GENRES (FILM_ID, GENRE_ID) VALUES (?, ?)";
         Set<Integer> saveGenres = genres.stream().map(Genre::getId).collect(Collectors.toSet());
         for (Integer genreId : saveGenres) {
-                jdbcTemplate.update(sql, filmId, genreId);
+            jdbcTemplate.update(sql, filmId, genreId);
         }
     }
 }
