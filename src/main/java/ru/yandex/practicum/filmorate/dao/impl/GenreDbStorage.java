@@ -37,8 +37,8 @@ public class GenreDbStorage implements GenreDao {
 
     @Override
     public Genre getGenreById(int id) {
-        String sql = "SELECT * FROM GENRES WHERE ID = ?";
         Genre genre;
+        String sql = "SELECT * FROM GENRES WHERE ID = ?";
         try {
             genre = jdbcTemplate.queryForObject(sql, this::makeGenre, id);
         } catch (EmptyResultDataAccessException e) {
