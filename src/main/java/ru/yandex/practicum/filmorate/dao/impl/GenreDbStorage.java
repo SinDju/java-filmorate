@@ -16,7 +16,6 @@ import java.util.stream.Collectors;
 @Component
 public class GenreDbStorage implements GenreDao {
     private final JdbcTemplate jdbcTemplate;
-    Genre genre = new Genre();
 
     public GenreDbStorage(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -36,8 +35,9 @@ public class GenreDbStorage implements GenreDao {
         return jdbcTemplate.query(sql, this::makeGenre, filmId);
     }
 
-    private Genre makeGenre (ResultSet resultSet, int rowNum) throws SQLException {
-        return new Genre(resultSet.getInt("ID"), resultSet.getString("GENRE_NAME"));
+    private Genre makeGenre(ResultSet resultSet, int rowNum) throws SQLException {
+        return
+                new Genre(resultSet.getInt("ID"), resultSet.getString("GENRE_NAME"));
     }
 
     @Override
