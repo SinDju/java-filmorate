@@ -17,7 +17,7 @@ public class InMemoryUserStorage implements UserStorage {
 
     @Override
     public Optional<User> getUser(int id) {
-        if (usersMap.get(id) == null){
+        if (usersMap.get(id) == null) {
             return Optional.empty();
         }
         return Optional.of(usersMap.get(id));
@@ -31,10 +31,6 @@ public class InMemoryUserStorage implements UserStorage {
 
     @Override
     public User updateUser(User user) {
-//        if (!usersMap.containsKey(user.getId())) {
-//            throw new NotFoundException("Пользователь с идентификатором " +
-//                    user.getId() + " не зарегистрирован!");
-//        }
         usersMap.put(user.getId(), user);
         return user;
     }
@@ -42,7 +38,8 @@ public class InMemoryUserStorage implements UserStorage {
     @Override
     public String deleteUser(User user) {
         if (!usersMap.containsKey(user.getId())) {
-            throw new ValidationException("Пользователь " + user + " не может быть удален, так как еще не зарегестрирован");
+            throw new ValidationException("Пользователь "
+                    + user + " не может быть удален, так как еще не зарегестрирован");
         }
         usersMap.remove(user.getId());
         return "Пользователь с ID " + user.getId() + " удален.";
