@@ -19,6 +19,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Component
 public class FilmDbStorage implements FilmStorage {
     private final Logger logger = LoggerFactory.getLogger(FilmDbStorage.class);
@@ -143,7 +144,6 @@ public class FilmDbStorage implements FilmStorage {
                 "WHERE ID = ?";
         jdbcTemplate.update(sql, film.getName(), film.getDescription(),
                 film.getReleaseDate(), film.getDuration(), film.getMpa().getId(), film.getId());
-        genreDbStorage.addGenreInFilm(film.getId(), film.getGenres());
         if (!film.getLikes().isEmpty()) {
             for (int userId : film.getLikes()) {
                 addLike(film.getId(), userId);
