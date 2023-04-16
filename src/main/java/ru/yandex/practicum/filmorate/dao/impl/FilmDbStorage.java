@@ -1,7 +1,6 @@
 package ru.yandex.practicum.filmorate.dao.impl;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -22,16 +21,11 @@ import java.util.Optional;
 @Slf4j
 @Component
 public class FilmDbStorage implements FilmStorage {
-    private final Logger logger = LoggerFactory.getLogger(FilmDbStorage.class);
     private final JdbcTemplate jdbcTemplate;
-    private MPARatingDbStorage mpaDbStorage;
-    private GenreDbStorage genreDbStorage;
 
     @Autowired
-    public FilmDbStorage(JdbcTemplate jdbcTemplate, MPARatingDbStorage mpaDbStorage, GenreDbStorage genreDbStorage) {
+    public FilmDbStorage(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        this.mpaDbStorage = mpaDbStorage;
-        this.genreDbStorage = genreDbStorage;
     }
 
     @Override
@@ -46,9 +40,9 @@ public class FilmDbStorage implements FilmStorage {
                 .name(rs.getString("NAME"))
                 .description(rs.getString("DESCRIPTION"))
                 .releaseDate(rs.getDate("RELEASEDATE").toLocalDate())
-                .genres(genreDbStorage.getGenresByFilm(rs.getInt("id")))
+                .genres(getGenresByFilm(rs.getInt("id")))
                 .duration(rs.getInt("DURATION"))
-                .mpa(mpaDbStorage.getMpaById(rs.getInt("MPARating_id"))).build();
+                .mpa(getMpaById(rs.getInt("MPARating_id"))).build();
         film.getLikes().addAll(getLikesFilm(film.getId()));
         return film;
     }
@@ -78,14 +72,14 @@ public class FilmDbStorage implements FilmStorage {
                     .description(rowFilm.getString("description"))
                     .duration(rowFilm.getInt("duration"))
                     .releaseDate(rowFilm.getDate("releasedate").toLocalDate())
-                    .genres(genreDbStorage.getGenresByFilm(rowFilm.getInt("id")))
-                    .mpa(mpaDbStorage.getMpaById(rowFilm.getInt("MPARating_id"))).build();
+                    .genres(getGenresByFilm(rowFilm.getInt("id")))
+                    .mpa(getMpaById(rowFilm.getInt("MPARating_id"))).build();
             film.getLikes().addAll(getLikesFilm(film.getId()));
-            logger.info("Найден фильм: {} {} {} {} {} {}", film.getId(), film.getName(), film.getDescription(),
+            log.info("Найден фильм: {} {} {} {} {} {}", film.getId(), film.getName(), film.getDescription(),
                     film.getReleaseDate(), film.getDuration(), film.getMpa().getName());
             return Optional.of(film);
         } else {
-            logger.info("Фильм с идентификатором {} не найден.", id);
+            log.info("Фильм с идентификатором {} не найден.", id);
             return Optional.empty();
         }
     }
@@ -117,15 +111,14 @@ public class FilmDbStorage implements FilmStorage {
             return statement;
         }, keyHolder);
         film.setId(keyHolder.getKey().intValue());
-        genreDbStorage.addGenreInFilm(film.getId(), film.getGenres());
         if (!film.getLikes().isEmpty()) {
             for (int userId : film.getLikes()) {
                 addLike(film.getId(), userId);
             }
         }
-        logger.info("Создан фильм: {} {} {} {} {} {}", film.getId(), film.getDescription(),
+        log.info("Создан фильм: {} {} {} {} {} {}", film.getId(), film.getDescription(),
                 film.getDuration(), film.getReleaseDate(), film.getMpa(), film.getLikes());
-        return getFilm(film.getId()).get();
+        return film;
     }
 
     @Override
