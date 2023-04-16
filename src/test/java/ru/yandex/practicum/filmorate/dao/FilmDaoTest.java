@@ -35,7 +35,7 @@ public class FilmDaoTest {
     @Order(1)
     @Test
     void getAllFilms() throws SQLException {
-        filmStorage.createFilm(Film.builder()
+        Film film1 = filmStorage.createFilm(Film.builder()
                 .name("test")
                 .description("test")
                 .releaseDate(LocalDate.now())
@@ -43,7 +43,7 @@ public class FilmDaoTest {
                 .genres(List.of(new Genre(1, "Комедия")))
                 .mpa(new MPARating(3, "PG-13"))
                 .build());
-        filmStorage.createFilm(Film.builder()
+        Film film2 = filmStorage.createFilm(Film.builder()
                 .name("test1")
                 .description("test1")
                 .releaseDate(LocalDate.now())
@@ -51,7 +51,7 @@ public class FilmDaoTest {
                 .genres(List.of(new Genre(1, "Комедия")))
                 .mpa(new MPARating(3, "PG-13"))
                 .build());
-        filmStorage.createFilm(Film.builder()
+        Film film3 = filmStorage.createFilm(Film.builder()
                 .name("test2")
                 .description("test2")
                 .releaseDate(LocalDate.now())
@@ -59,7 +59,9 @@ public class FilmDaoTest {
                 .genres(List.of(new Genre(1, "Комедия")))
                 .mpa(new MPARating(3, "PG-13"))
                 .build());
-
+        genreDao.addGenreInFilm(film1.getId(), film1.getGenres());
+        genreDao.addGenreInFilm(film2.getId(), film2.getGenres());
+        genreDao.addGenreInFilm(film3.getId(), film3.getGenres());
         List<Film> films = filmStorage.getAllFilms();
         assertThat(films.get(0).getName()).isEqualTo("test");
         assertThat(films.get(0).getDescription()).isEqualTo("test");
@@ -77,7 +79,7 @@ public class FilmDaoTest {
     @Order(2)
     @Test
     void updateFilm() {
-        filmStorage.createFilm(Film.builder()
+        Film film4 = filmStorage.createFilm(Film.builder()
                 .name("test")
                 .description("test")
                 .releaseDate(LocalDate.now())
@@ -85,6 +87,7 @@ public class FilmDaoTest {
                 .genres(List.of(new Genre(1, "Комедия")))
                 .mpa(new MPARating(3, "PG-13"))
                 .build());
+        genreDao.addGenreInFilm(film4.getId(), film4.getGenres());
         Film film = filmStorage.getFilm(1).get();
         film.setName("TestCheck");
         filmStorage.updateFilm(film);
@@ -100,7 +103,7 @@ public class FilmDaoTest {
     @Order(3)
     @Test
     void getFilmById() {
-        filmStorage.createFilm(Film.builder()
+        Film film = filmStorage.createFilm(Film.builder()
                 .id(4)
                 .name("test")
                 .description("test")
@@ -109,7 +112,8 @@ public class FilmDaoTest {
                 .genres(List.of(new Genre(1, "Комедия")))
                 .mpa(new MPARating(3, "PG-13"))
                 .build());
-        Film film = filmStorage.getFilm(4).get();
+        genreDao.addGenreInFilm(film.getId(), film.getGenres());
+        filmStorage.getFilm(4).get();
         assertThat(film.getName()).isEqualTo("test");
         assertThat(film.getDescription()).isEqualTo("test");
         assertThat(film.getReleaseDate()).isNotNull();

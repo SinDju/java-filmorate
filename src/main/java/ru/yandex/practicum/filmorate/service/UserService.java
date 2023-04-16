@@ -14,7 +14,6 @@ import java.util.*;
 public class UserService {
     // Сервис реализует основную логику проверки и запрашивает необходимую информацию от Стореджа
     private UserStorage userStorage;
-    private int generatoreId = 0;
 
     @Autowired
     public UserService(@Qualifier("userDbStorage") UserStorage userStorage) {
