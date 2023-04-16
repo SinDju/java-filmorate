@@ -53,8 +53,8 @@ public class FilmDbStorage implements FilmStorage {
     }
 
     private MPARating getMpaById(int id) {
-        String sql = "SELECT * FROM MPARATING WHERE ID = ?";
-        SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet(sql, id);
+        String sqlGetMPA = "SELECT * FROM MPARATING WHERE ID = ?";
+        SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet(sqlGetMPA, id);
         if (!sqlRowSet.next()) {
             throw new NotFoundException("Такого рейтенга нет");
         }
