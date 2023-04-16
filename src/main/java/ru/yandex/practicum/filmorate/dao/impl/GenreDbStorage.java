@@ -28,6 +28,14 @@ public class GenreDbStorage implements GenreDao {
     }
 
     @Override
+    public List<Genre> getGenresByFilm(int filmId) {
+        String sql = "SELECT GENRES.ID, GENRES.GENRE_NAME FROM GENRES " +
+                "INNER JOIN FILMS_GENRES FG on GENRES.ID = FG.GENRE_ID " +
+                "WHERE FILM_ID = ?";
+        return jdbcTemplate.query(sql, this::makeGenre, filmId);
+    }
+
+    @Override
     public Genre getGenreById(int id) {
         Genre genre;
         String sql = "SELECT * FROM GENRES WHERE ID = ?";
@@ -45,7 +53,6 @@ public class GenreDbStorage implements GenreDao {
         jdbcTemplate.update(sql, filmId);
     }
 
-    @Override
     public void addGenreInFilm(int filmId, List<Genre> genres) {
         deleteGenreInFilm(filmId);
         if (genres.isEmpty()) {

@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.dao.impl;
 
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -18,14 +19,18 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-@Slf4j
 @Component
 public class FilmDbStorage implements FilmStorage {
+    private final Logger logger = LoggerFactory.getLogger(FilmDbStorage.class);
     private final JdbcTemplate jdbcTemplate;
+    private MPARatingDbStorage mpaDbStorage;
+    private GenreDbStorage genreDbStorage;
 
     @Autowired
-    public FilmDbStorage(JdbcTemplate jdbcTemplate) {
+    public FilmDbStorage(JdbcTemplate jdbcTemplate, MPARatingDbStorage mpaDbStorage, GenreDbStorage genreDbStorage) {
         this.jdbcTemplate = jdbcTemplate;
+        this.mpaDbStorage = mpaDbStorage;
+        this.genreDbStorage = genreDbStorage;
     }
 
     @Override
@@ -40,9 +45,9 @@ public class FilmDbStorage implements FilmStorage {
                 .name(rs.getString("NAME"))
                 .description(rs.getString("DESCRIPTION"))
                 .releaseDate(rs.getDate("RELEASEDATE").toLocalDate())
-                .genres(getGenresByFilm(rs.getInt("id")))
+                .genres(genreDbStorage.getGenresByFilm(rs.getInt("id")))
                 .duration(rs.getInt("DURATION"))
-                .mpa(getMpaById(rs.getInt("MPARating_id"))).build();
+                .mpa(mpaDbStorage.getMpaById(rs.getInt("MPARating_id"))).build();
         film.getLikes().addAll(getLikesFilm(film.getId()));
         return film;
     }
@@ -72,14 +77,14 @@ public class FilmDbStorage implements FilmStorage {
                     .description(rowFilm.getString("description"))
                     .duration(rowFilm.getInt("duration"))
                     .releaseDate(rowFilm.getDate("releasedate").toLocalDate())
-                    .genres(getGenresByFilm(rowFilm.getInt("id")))
-                    .mpa(getMpaById(rowFilm.getInt("MPARating_id"))).build();
+                    .genres(genreDbStorage.getGenresByFilm(rowFilm.getInt("id")))
+                    .mpa(mpaDbStorage.getMpaById(rowFilm.getInt("MPARating_id"))).build();
             film.getLikes().addAll(getLikesFilm(film.getId()));
-            log.info("Найден фильм: {} {} {} {} {} {}", film.getId(), film.getName(), film.getDescription(),
+            logger.info("Найден фильм: {} {} {} {} {} {}", film.getId(), film.getName(), film.getDescription(),
                     film.getReleaseDate(), film.getDuration(), film.getMpa().getName());
             return Optional.of(film);
         } else {
-            log.info("Фильм с идентификатором {} не найден.", id);
+            logger.info("Фильм с идентификатором {} не найден.", id);
             return Optional.empty();
         }
     }
@@ -111,14 +116,15 @@ public class FilmDbStorage implements FilmStorage {
             return statement;
         }, keyHolder);
         film.setId(keyHolder.getKey().intValue());
+        genreDbStorage.addGenreInFilm(film.getId(), film.getGenres());
         if (!film.getLikes().isEmpty()) {
             for (int userId : film.getLikes()) {
                 addLike(film.getId(), userId);
             }
         }
-        log.info("Создан фильм: {} {} {} {} {} {}", film.getId(), film.getDescription(),
+        logger.info("Создан фильм: {} {} {} {} {} {}", film.getId(), film.getDescription(),
                 film.getDuration(), film.getReleaseDate(), film.getMpa(), film.getLikes());
-        return film;
+        return getFilm(film.getId()).get();
     }
 
     @Override
@@ -137,6 +143,7 @@ public class FilmDbStorage implements FilmStorage {
                 "WHERE ID = ?";
         jdbcTemplate.update(sql, film.getName(), film.getDescription(),
                 film.getReleaseDate(), film.getDuration(), film.getMpa().getId(), film.getId());
+        genreDbStorage.addGenreInFilm(film.getId(), film.getGenres());
         if (!film.getLikes().isEmpty()) {
             for (int userId : film.getLikes()) {
                 addLike(film.getId(), userId);

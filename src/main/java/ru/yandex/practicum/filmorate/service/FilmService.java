@@ -16,14 +16,13 @@ import java.util.List;
 public class FilmService {
     private final UserService userService;
     private final FilmStorage filmStorage;
-    private GenreService genreService;
+    private int generatoreId = 0;
 
     @Autowired
-    FilmService(UserService userService, @Qualifier("filmDbStorage") FilmStorage filmStorage,
-                GenreService genreService) {
+    FilmService(UserService userService,
+                @Qualifier("filmDbStorage") FilmStorage filmStorage) {
         this.userService = userService;
         this.filmStorage = filmStorage;
-        this.genreService = genreService;
     }
 
     public List<Film> getAllFilms() {
@@ -31,14 +30,11 @@ public class FilmService {
     }
 
     public Film createFilm(Film film) {
-        Film createFilm = filmStorage.createFilm(film);
-       genreService.addGenreInFilm(createFilm.getId(), film.getGenres());
-        return filmStorage.getFilm(createFilm.getId()).get();
+        return filmStorage.createFilm(film);
     }
 
     public Film updateFilm(Film film) {
         getFilmStorage(film.getId().toString());
-        genreService.addGenreInFilm(film.getId(), film.getGenres());
         return filmStorage.updateFilm(film);
     }
 
