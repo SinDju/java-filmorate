@@ -53,8 +53,8 @@ public class FilmDbStorage implements FilmStorage {
     }
 
     private MPARating getMpaById(int id) {
-        String sql = "SELECT * FROM MPARATING WHERE ID = ?";
-        SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet(sql, id);
+        String sqlGetMPA = "SELECT * FROM MPARATING WHERE ID = ?";
+        SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet(sqlGetMPA, id);
         if (!sqlRowSet.next()) {
             throw new NotFoundException("Такого рейтенга нет");
         }
@@ -85,10 +85,10 @@ public class FilmDbStorage implements FilmStorage {
     }
 
     private List<Genre> getGenresByFilm(int filmId) {
-        String sql = "SELECT GENRES.ID, GENRES.GENRE_NAME FROM GENRES " +
+        String sqlGetGenres = "SELECT GENRES.ID, GENRES.GENRE_NAME FROM GENRES " +
                 "INNER JOIN FILMS_GENRES FG on GENRES.ID = FG.GENRE_ID " +
                 "WHERE FILM_ID = ?";
-        return jdbcTemplate.query(sql, this::makeGenre, filmId);
+        return jdbcTemplate.query(sqlGetGenres, this::makeGenre, filmId);
     }
 
     private Genre makeGenre(ResultSet rs, int rowNum) throws SQLException {
