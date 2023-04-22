@@ -1,10 +1,10 @@
 package ru.yandex.practicum.filmorate.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exeption.ErrorIdException;
 import ru.yandex.practicum.filmorate.exeption.NotFoundException;
-import ru.yandex.practicum.filmorate.exeption.UserValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
@@ -14,37 +14,28 @@ import java.util.*;
 public class UserService {
     // Сервис реализует основную логику проверки и запрашивает необходимую информацию от Стореджа
     private UserStorage userStorage;
-    private int generatoreId = 0;
 
     @Autowired
-    public UserService(UserStorage userStorage) {
+    public UserService(@Qualifier("userDbStorage") UserStorage userStorage) {
         this.userStorage = userStorage;
-    }
-
-    public List<User> getAll() {
-        return userStorage.getAllUsers();
     }
 
     public User findById(String id) {
         return getUserStorage(id);
     }
 
+
+    public List<User> getAll() {
+        return userStorage.getAllUsers();
+    }
+
     public User addUser(User user) {
-        if (userStorage.getAllUsers().contains(user)) {
-            throw new UserValidationException("Пользователь уже зарегестрирован");
-        }
-        if (user.getName() == null || user.getName().isBlank()) {
-            user.setName(user.getLogin());
-        }
-        final int id = ++generatoreId;
-        user.setId(id);
         return userStorage.createUser(user);
     }
 
     public User updateUser(User user) {
-        getUserStorage(String.valueOf(user.getId()));
-        userStorage.updateUser(user);
-        return user;
+        getUserStorage(user.getId().toString());
+        return userStorage.updateUser(user);
     }
 
     private int stringForInt(String id) {
@@ -62,18 +53,18 @@ public class UserService {
         Collection<User> commonFriends = new HashSet<>();
         for (Integer idFriend : user.getFriendIds()) {
             if (userFriend.getFriendIds().contains(idFriend)) {
-                commonFriends.add(userStorage.getUser(idFriend));
+                commonFriends.add(userStorage.getUser(idFriend).get());
             }
         }
         return commonFriends;
     }
 
     // получение списка друзей пользователя
-    public ArrayList<User> getFriends(String userId) {
+    public List<User> getFriends(String userId) {
         User user = getUserStorage(userId);
         ArrayList<User> friendsUser = new ArrayList<>();
         for (Integer idFriend : user.getFriendIds()) {
-            friendsUser.add(userStorage.getUser(idFriend));
+            friendsUser.add(userStorage.getUser(idFriend).get());
         }
         return friendsUser;
     }
@@ -92,15 +83,13 @@ public class UserService {
 
     public User getUserStorage(String supposedId) {
         Integer userId = stringForInt(supposedId);
-        if(userId == Integer.MIN_VALUE) {
+        if (userId == Integer.MIN_VALUE) {
             throw new ErrorIdException("Не удалось распознать идентификатор пользователя: "
                     + supposedId);
         }
-        User user = userStorage.getUser(userId);
-        if (user == null) {
-            throw new NotFoundException("Пользователь с ID " +
-                    supposedId + " не зарегистрирован!");
-        }
+       User user = userStorage.getUser(userId).orElseThrow(() ->
+             new NotFoundException("Пользователь с ID " +
+                    supposedId + " не зарегистрирован!"));
         return user;
     }
 }

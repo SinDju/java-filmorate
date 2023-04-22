@@ -5,6 +5,7 @@ import javax.validation.ConstraintValidatorContext;
 import java.time.LocalDate;
 
 public class CorrectReleaseDateValidator implements ConstraintValidator<CorrectReleaseDate, LocalDate> {
+
     @Override
     public boolean isValid(LocalDate date, ConstraintValidatorContext validatorContext) {
         LocalDate birthdayMovie = LocalDate.of(1895, 12, 28);

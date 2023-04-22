@@ -14,11 +14,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Constraint(validatedBy = CorrectReleaseDateValidator.class)
 @Documented
 public @interface CorrectReleaseDate {
-
     String message() default "{Incorrect releaseDate}";
-
     Class<?>[] groups() default {};
-
     Class<? extends Payload>[] payload() default {};
-
 }
